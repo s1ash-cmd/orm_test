@@ -37,13 +37,13 @@ func demo(db *gorm.DB) {
   if err:=tx.Model(&book).Update("title","ORM и SQL").Error;err!=nil{return err}
   var loaded Book
   if err:=tx.Preload("Loans").First(&loaded,book.ID).Error;err!=nil{return err}
-  if loaded.Title!="ORM и SQL" || len(loaded.Loans)!=1 {return fmt.Errorf("CRUD")}
-  fmt.Printf("Book %d: %s; loans=%d\n",loaded.ID,loaded.Title,len(loaded.Loans))
+  if loaded.Title!="ORM и SQL" || len(loaded.Loans)!=1 {return fmt.Errorf("не удалось проверить изменение книги и загрузку выдачи")}
+  fmt.Printf("Книга %d: %s; выдач: %d\n",loaded.ID,loaded.Title,len(loaded.Loans))
   if err:=tx.Delete(&loan).Error;err!=nil{return err}
   if err:=tx.Delete(&book).Error;err!=nil{return err}
   var count int64
   if err:=tx.Model(&Book{}).Where("id = ?",book.ID).Count(&count).Error;err!=nil{return err}
-  if count!=0{return fmt.Errorf("DELETE")};return nil
+  if count!=0{return fmt.Errorf("книга осталась в базе после удаления")};return nil
  }))
  fmt.Println("CRUD и связь 1:N проверены; демонстрационные записи удалены.")
 }
@@ -75,7 +75,7 @@ func bench(db *gorm.DB, raw *sql.DB) {
  }
  results:=[]map[string]any{}
  for _,kind:=range []string{"point","range","join"} {
-  for _,start:=range []int{1,2501,5001} {a,_:=json.Marshal(orm(kind,start));b,_:=json.Marshal(direct(kind,start));if string(a)!=string(b){panic("Mismatch")}}
+  for _,start:=range []int{1,2501,5001} {a,_:=json.Marshal(orm(kind,start));b,_:=json.Marshal(direct(kind,start));if string(a)!=string(b){panic("Результаты ORM и прямого SQL не совпадают.")}}
   for i:=0;i<50;i++ {orm(kind,1+i);direct(kind,1+i)}
   samples:=map[string][]float64{"orm":{},"sql":{}}
   for r:=0;r<7;r++ {
@@ -85,7 +85,7 @@ func bench(db *gorm.DB, raw *sql.DB) {
     for i:=0;i<300;i++ {
      start:=1+((i*37+r*101)%9000);t:=time.Now();rows:=fn(kind,start)
      samples[name]=append(samples[name],float64(time.Since(t).Nanoseconds())/1000)
-     expected:=100;if kind=="point"{expected=1};if len(rows)!=expected{panic("Count")}
+     expected:=100;if kind=="point"{expected=1};if len(rows)!=expected{panic("Запрос вернул неверное число строк.")}
     }
    }
   }
@@ -97,7 +97,7 @@ func bench(db *gorm.DB, raw *sql.DB) {
  must(json.NewEncoder(os.Stdout).Encode(map[string]any{"language":"Go","orm":"GORM 1.31.1","sqlite":version,"results":results}))
 }
 func main() {
- mode:="demo";if len(os.Args)>1 {mode=os.Args[1]};if mode!="demo"&&mode!="bench" {panic("demo | bench")}
+ mode:="demo";if len(os.Args)>1 {mode=os.Args[1]};if mode!="demo"&&mode!="bench" {panic("Укажите режим demo или bench.")}
  path:=os.Getenv("ORM_DB_PATH");if path=="" {if mode=="bench" {path="../../benchmark/library.db"} else {path="demo.db"}}
  path,err:=filepath.Abs(path);must(err)
  if mode=="bench" {_,err=os.Stat(path);must(err)}

@@ -1,6 +1,7 @@
 {
   "name": "orm_test",
   "version": "1.0.0",
+  "description": "Сравнение ORM и прямого SQL в C#, Go, TypeScript и Python. Графики, примеры кода и повторение измерений.",
   "private": true,
   "type": "module",
   "scripts": {

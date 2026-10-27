@@ -12,7 +12,7 @@ async function closeFilters(page: Page) {
   if (await button.isVisible()) await button.click();
 }
 
-test("graphs change metric and unit using saved measurements", async ({ page }) => {
+test("Графики переключают метрику и единицы по сохранённым измерениям", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator(".benchmark-chart")).toHaveCount(4);
   const value = page.locator('[data-library="csharp"] .orm-label').first();
@@ -33,7 +33,7 @@ test("graphs change metric and unit using saved measurements", async ({ page }) 
   await expect(page.locator(".detail-dialog")).not.toBeVisible();
 });
 
-test("TypeORM shows both models, relationship decorators, and JOIN", async ({ page }) => {
+test("Пример TypeORM показывает обе модели, декораторы связи и JOIN", async ({ page }) => {
   await page.goto("/#code/typescript");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("TypeORM");
   await expect(page.locator(".code-block").first()).toContainText("@OneToMany");
@@ -45,7 +45,7 @@ test("TypeORM shows both models, relationship decorators, and JOIN", async ({ pa
   await expect(page.locator(".code-columns")).toContainText("b.id = :start");
 });
 
-test("empty filters recover and theme persists without horizontal overflow", async ({ page }) => {
+test("Фильтры сбрасываются, тема сохраняется, горизонтального переполнения нет", async ({ page }) => {
   await page.goto("/");
   const panel = await filters(page);
   await panel.getByRole("button", { name: "Сбросить", exact: true }).click();
@@ -60,7 +60,7 @@ test("empty filters recover and theme persists without horizontal overflow", asy
   expect(await page.locator(".main-feed").evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
 });
 
-test("CSV export follows filters and the table sorts numerically", async ({ page }) => {
+test("Экспорт CSV учитывает фильтры, таблица сортирует числа", async ({ page }) => {
   await page.goto("/");
   const panel = await filters(page);
   await panel.getByRole("button", { name: "JOIN на 100 выдач", exact: true }).click();
@@ -81,7 +81,7 @@ test("CSV export follows filters and the table sorts numerically", async ({ page
   expect(content).not.toContain('"point"');
 });
 
-test("instructions include all projects and Windows commands", async ({ page }) => {
+test("Инструкция содержит все проекты и команды для Windows", async ({ page }) => {
   await page.goto("/#repeat/python");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Повторить тест");
   await expect(page.locator(".repeat-view")).toContainText("dotnet restore --locked-mode");
@@ -92,7 +92,7 @@ test("instructions include all projects and Windows commands", async ({ page }) 
   await expect(page.locator(".repeat-view")).toContainText("go-demo.exe");
 });
 
-test("data routes expose measurements and only approved project files", async ({ request }) => {
+test("API отдаёт измерения и только разрешённые файлы проекта", async ({ request }) => {
   const result = await request.get("/api/results");
   expect(result.ok()).toBe(true);
   const data = await result.json();

@@ -53,7 +53,7 @@ def demo():
         loaded = session.scalars(select(Book).where(Book.id == book.id)
             .options(selectinload(Book.loans))).one()
         assert loaded.title == 'ORM и SQL' and len(loaded.loans) == 1
-        print(f'Book {loaded.id}: {loaded.title}; loans={len(loaded.loans)}')
+        print(f'Книга {loaded.id}: {loaded.title}; выдач: {len(loaded.loans)}')
         session.delete(loan)
         session.flush()
         session.delete(book)
@@ -66,7 +66,7 @@ def bench():
         raise SystemExit('Сначала выполните python benchmark/seed.py')
     raw = sqlite3.connect(path)
     # Соединения открыты заранее. Session создаётся на каждый запрос;
-    # identity map не может вернуть объект вместо обращения к SQLite.
+    # Карта идентичности не может вернуть объект вместо обращения к SQLite.
     conn = engine.connect()
     def orm(kind, start):
         with Session(bind=conn, autoflush=False) as s:
@@ -105,4 +105,4 @@ def bench():
         sqlite=sqlite3.sqlite_version, results=results)))
 
 if __name__ == '__main__':
-    demo() if mode == 'demo' else bench() if mode == 'bench' else sys.exit('demo | bench')
+    demo() if mode == 'demo' else bench() if mode == 'bench' else sys.exit('Укажите режим demo или bench.')

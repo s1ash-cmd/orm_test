@@ -33,11 +33,11 @@ async function demo() {
     const loan = await loans.save(loans.create({bookId:book.id}));
     await books.update(book.id, {title:'ORM и SQL'});
     const loaded = await books.findOneOrFail({where:{id:book.id}, relations:{loans:true}});
-    if (loaded.title !== 'ORM и SQL' || loaded.loans.length !== 1) throw Error('CRUD');
-    console.log(`Book ${loaded.id}: ${loaded.title}; loans=${loaded.loans.length}`);
+    if (loaded.title !== 'ORM и SQL' || loaded.loans.length !== 1) throw Error('Не удалось проверить изменение книги и загрузку выдачи.');
+    console.log(`Книга ${loaded.id}: ${loaded.title}; выдач: ${loaded.loans.length}`);
     await loans.delete(loan.id);
     await books.delete(book.id);
-    if (await books.findOneBy({id:book.id})) throw Error('DELETE');
+    if (await books.findOneBy({id:book.id})) throw Error('Книга осталась в базе после удаления.');
   });
   console.log('CRUD и связь 1:N проверены; демонстрационные записи удалены.');
 }
@@ -66,7 +66,7 @@ async function bench() {
   }
   const results = [];
   for (const kind of ['point','range','join']) {
-    for (const start of [1,2501,5001]) if (JSON.stringify(await orm(kind,start)) !== JSON.stringify(sql(kind,start))) throw Error('Mismatch');
+    for (const start of [1,2501,5001]) if (JSON.stringify(await orm(kind,start)) !== JSON.stringify(sql(kind,start))) throw Error('Результаты ORM и прямого SQL не совпадают.');
     const samples:Record<string,number[]> = {orm:[],sql:[]};
     for (let i=0;i<50;i++) {await orm(kind,1+i);sql(kind,1+i);}
     for (let r=0;r<7;r++) for (const name of r%2 === 0 ? ['orm','sql'] : ['sql','orm']) {
@@ -76,7 +76,7 @@ async function bench() {
         // Для обоих путей учитываем одинаковый переход через await.
         const rows = await (name === 'orm' ? orm(kind,start) : sql(kind,start));
         samples[name].push(Number(process.hrtime.bigint()-t)/1000);
-        if (rows.length !== (kind === 'point' ? 1 : 100)) throw Error('Count');
+        if (rows.length !== (kind === 'point' ? 1 : 100)) throw Error('Запрос вернул неверное число строк.');
       }
     }
     for (const [method,xs] of Object.entries(samples)) {
@@ -90,7 +90,7 @@ async function bench() {
   raw.close();
 }
 async function main() {
-  if (!['bench','demo'].includes(mode)) throw Error('demo | bench');
+  if (!['bench','demo'].includes(mode)) throw Error('Укажите режим demo или bench.');
   if (mode === 'bench' && !fs.existsSync(dbPath)) throw Error('Сначала python benchmark/seed.py');
   await source.initialize();
   try { if (mode === 'demo') await demo(); else await bench(); }

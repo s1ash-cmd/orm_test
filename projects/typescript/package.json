@@ -1,5 +1,6 @@
 {
   "name": "orm-library-demo",
+  "description": "Пример TypeORM: модели, связь 1:N, CRUD и сравнение с прямым SQL.",
   "private": true,
   "version": "1.0.0",
   "scripts": {

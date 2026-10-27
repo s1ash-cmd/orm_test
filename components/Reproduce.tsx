@@ -15,7 +15,7 @@ export function Reproduce({ data, selected, onResults }: { data: Dataset; select
   return <div className="content-view repeat-view">
     <div className="page-heading"><div><h1>Повторить тест</h1><p>Из корня репозитория. Для общего прогона нужны все четыре проекта.</p></div><div className="segmented" role="group" aria-label="Операционная система"><button aria-pressed={!windows} onClick={() => setWindows(false)}>macOS / Linux</button><button aria-pressed={windows} onClick={() => setWindows(true)}>Windows</button></div></div>
     <div className="runtime-list">{data.libraries.map(library => <span key={library.id}>{library.runtime}</span>)}</div>
-    <section className="step"><div className="step-heading"><span>1</span><h2>Python и окружение</h2></div><CodeBlock label="Установка и demo" code={setup} syntax={windows ? "powershell" : "sh"} numbered={false} /></section>
+    <section className="step"><div className="step-heading"><span>1</span><h2>Python и окружение</h2></div><CodeBlock label="Установка и демонстрация" code={setup} syntax={windows ? "powershell" : "sh"} numbered={false} /></section>
     <section className="step"><div className="step-heading"><span>2</span><h2>Собрать остальные проекты</h2></div>
       <div className="build-projects">{data.examples.filter(example => example.id !== "python").map(example => <details key={example.id + selected} open={example.id === selected || selected === "python"}>
         <summary><strong>{data.libraries.find(library => library.id === example.id)?.orm}</strong><span>{example.files.length} файла</span></summary>

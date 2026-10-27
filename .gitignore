@@ -21,6 +21,5 @@ playwright-report/
 .env*
 !.env.example
 /deliverables/
-/README.md
 /AGENTS.md
 benchmark/go-demo.exe

@@ -11,9 +11,11 @@ import subprocess
 import sys
 
 root = Path(__file__).resolve().parents[1]
-parser = argparse.ArgumentParser()
-parser.add_argument('--node', default=shutil.which('node'))
-parser.add_argument('--go-binary', default=str(root/'benchmark'/'go-demo'))
+parser = argparse.ArgumentParser(description='Сравнение ORM и прямого SQL в четырёх языках.', add_help=False)
+options = parser.add_argument_group('Параметры')
+options.add_argument('-h', '--help', action='help', help='Показать справку и выйти.')
+options.add_argument('--node', default=shutil.which('node'), metavar='ПУТЬ', help='Путь к Node.js для проекта TypeScript.')
+options.add_argument('--go-binary', default=str(root/'benchmark'/'go-demo'), metavar='ПУТЬ', help='Путь к собранной программе Go.')
 args = parser.parse_args()
 os.chdir(root)
 subprocess.run([sys.executable, 'benchmark/seed.py'], check=True)

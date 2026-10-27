@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Text.Json;
 
 var mode = args.FirstOrDefault() ?? "demo";
-if (mode is not ("demo" or "bench")) throw new ArgumentException("demo | bench");
+if (mode is not ("demo" or "bench")) throw new ArgumentException("Укажите режим demo или bench.");
 var path = Environment.GetEnvironmentVariable("ORM_DB_PATH") ??
     Path.GetFullPath(mode == "bench" ? "../../benchmark/library.db" : "demo.db");
 if (mode == "bench" && !File.Exists(path)) throw new FileNotFoundException("Сначала python benchmark/seed.py");
@@ -24,11 +24,11 @@ if (mode == "demo") {
     book.Title = "ORM и SQL"; db.SaveChanges();
     db.ChangeTracker.Clear();
     var loaded = db.Books.Include(b => b.Loans).Single(b => b.Id == book.Id);
-    if (loaded.Title != "ORM и SQL" || loaded.Loans.Count != 1) throw new Exception("CRUD");
-    Console.WriteLine($"Book {loaded.Id}: {loaded.Title}; loans={loaded.Loans.Count}");
+    if (loaded.Title != "ORM и SQL" || loaded.Loans.Count != 1) throw new Exception("Не удалось проверить изменение книги и загрузку выдачи.");
+    Console.WriteLine($"Книга {loaded.Id}: {loaded.Title}; выдач: {loaded.Loans.Count}");
     db.Loans.RemoveRange(loaded.Loans); db.SaveChanges();
     db.Books.Remove(loaded); db.SaveChanges();
-    if (db.Books.Any(b => b.Id == book.Id)) throw new Exception("DELETE");
+    if (db.Books.Any(b => b.Id == book.Id)) throw new Exception("Книга осталась в базе после удаления.");
     tx.Commit();
     Console.WriteLine("CRUD и связь 1:N проверены; демонстрационные записи удалены.");
 } else {
@@ -65,7 +65,7 @@ if (mode == "demo") {
     var results = new List<object>();
     foreach (var kind in new[] {"point","range","join"}) {
         foreach (var start in new[] {1,2501,5001})
-            if (JsonSerializer.Serialize(Orm(kind,start)) != JsonSerializer.Serialize(Sql(kind,start))) throw new Exception("Mismatch");
+            if (JsonSerializer.Serialize(Orm(kind,start)) != JsonSerializer.Serialize(Sql(kind,start))) throw new Exception("Результаты ORM и прямого SQL не совпадают.");
         for (var i=0;i<50;i++) { Orm(kind,1+i); Sql(kind,1+i); }
         var samples = new Dictionary<string,List<double>> { ["orm"]=[],["sql"]=[] };
         for (var r=0;r<7;r++) foreach (var name in r%2==0 ? new[] {"orm","sql"} : new[] {"sql","orm"}) {
@@ -74,7 +74,7 @@ if (mode == "demo") {
                 var t = Stopwatch.GetTimestamp();
                 var rows = name == "orm" ? Orm(kind,start) : Sql(kind,start);
                 samples[name].Add(Stopwatch.GetElapsedTime(t).TotalMicroseconds);
-                if (rows.Count != (kind == "point" ? 1 : 100)) throw new Exception("Count");
+                if (rows.Count != (kind == "point" ? 1 : 100)) throw new Exception("Запрос вернул неверное число строк.");
             }
         }
         foreach (var (name,xs) in samples) {
