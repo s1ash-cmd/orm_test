@@ -1,0 +1,35 @@
+{
+  "utc": "2026-10-27T12:17:58.545745+00:00",
+  "system": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "python": "3.14.10 (main, Oct 25 2026, 17:12:00) [Clang 21.0.0 (clang-2100.3.34.2)]",
+  "node": "v26.12.1",
+  "dotnet": "10.0.403",
+  "go": "go version go1.27.3 darwin/amd64",
+  "commands": {
+    "python": [
+      ".venv/bin/python",
+      "projects/python/main.py",
+      "bench"
+    ],
+    "csharp": [
+      "dotnet",
+      "projects/csharp/bin/Release/net10.0/LibraryDemo.dll",
+      "bench"
+    ],
+    "go": [
+      "benchmark/go-demo",
+      "bench"
+    ],
+    "typescript": [
+      "node",
+      "projects/typescript/dist/main.js",
+      "bench"
+    ]
+  },
+  "hardware": {
+    "chip": "Apple M5 Pro",
+    "architecture": "arm64",
+    "go_binary_architecture": "arm64"
+  },
+  "command_paths": "portable"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "orm-library-demo",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc",
+    "demo": "node dist/main.js demo",
+    "bench": "node dist/main.js bench"
+  },
+  "dependencies": {
+    "typeorm": "0.3.31",
+    "reflect-metadata": "0.2.2",
+    "better-sqlite3": "12.11.1"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "24.10.1",
+    "@types/better-sqlite3": "7.6.13"
+  }
+}
