@@ -79,7 +79,7 @@ export default function Dashboard({ data }: { data: Dataset }) {
         {section === "results" && <div className="section-head"><span>Показать на графиках</span><button onClick={() => setEnabled(libraries.map(item => item.id))}>Все</button><button onClick={() => setEnabled([])}>Сбросить</button></div>}
         {data.libraries.map(item => {
           const checked = section === "results" ? enabled.includes(item.id) : activeLibrary === item.id;
-          return <button key={item.id} className="library-row" aria-pressed={checked} onClick={() => chooseLibrary(item.id)}>
+          return <button key={item.id} className="library-row" data-language={item.id} aria-pressed={checked} onClick={() => chooseLibrary(item.id)}>
             <span className={"selection " + (checked ? "checked" : "")}>{checked && <Check size={10} />}</span>
             <span className="library-name">{item.orm.replace(/\s+\d.*$/, "")}<small>{item.language}</small></span>
           </button>;

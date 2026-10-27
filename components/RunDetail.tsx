@@ -55,7 +55,7 @@ export function RunDetail({ selected, onClose }: { selected: { library: LibraryR
     return () => controller.abort();
   }, [selected, attempt]);
   const result = selected?.library.results.find(item => item.case === selected.kind);
-  return <dialog ref={dialog} className="detail-dialog" onClose={onClose} onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }} aria-labelledby="detail-title">
+  return <dialog ref={dialog} className="detail-dialog" data-language={selected?.library.id} onClose={onClose} onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }} aria-labelledby="detail-title">
     {selected && result && <div className="detail-inner">
       <div className="detail-top"><span>{selected.library.language}</span><span>{selected.library.orm}</span><button className="icon-button" aria-label="Закрыть измерения" onClick={onClose}><X size={19} /></button></div>
       <div className="detail-body">

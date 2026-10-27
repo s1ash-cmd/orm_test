@@ -27,7 +27,7 @@ export function BarChart({ library, metric, selectedCase, relative, sharedMax, o
   const rowHeight = (height - top - bottom) / rows.length;
   const ticks = Array.from({ length: 5 }, (_, i) => maximum * i / 4);
   const focused = library.results.find(row => row.case === hover);
-  return <section className="benchmark-chart" data-library={library.id}>
+  return <section className="benchmark-chart" data-library={library.id} data-language={library.id}>
     <div className="chart-heading">
       <button onClick={() => onSelect(library, rows[0].case)} className="chart-title"><h2>{library.orm.replace(/\s+\d.*$/, "")}</h2><span>{library.language}</span></button>
       <span className="sqlite-version">SQLite {library.sqlite}</span>

@@ -9,7 +9,7 @@ import type { CaseId, Example, LibraryResult } from "@/lib/types";
 export function Examples({ example, library }: { example: Example; library: LibraryResult }) {
   const [view, setView] = useState("model");
   const [kind, setKind] = useState<CaseId>("join");
-  return <div className="content-view">
+  return <div className="content-view" data-language={library.id}>
     <div className="page-heading"><div><h1>{library.orm}</h1><p>{library.runtime} / SQLite {library.sqlite}</p></div><a className="text-button" href={fileUrl(example.filename)}><Download size={14} />{example.filename.split("/").at(-1)}</a></div>
     <nav className="content-tabs" aria-label="Примеры кода">{[["model", "Модели и связи"], ["connection", "Подключение"], ["crud", "CRUD"], ["queries", "Запросы"]].map(([id, label]) => <button key={id} aria-current={view === id ? "page" : undefined} onClick={() => setView(id)}>{label}</button>)}</nav>
     <p className="section-note">{example.note}</p>
