@@ -176,3 +176,8 @@ npm run test:e2e
 ```
 
 Браузерные сценарии проверяют интерфейс на компьютере и телефоне. Для своего Chromium можно задать `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`.
+
+## Авторы
+
+- [s1ash-cmd](https://github.com/s1ash-cmd)
+- [anneett](https://github.com/anneett)
